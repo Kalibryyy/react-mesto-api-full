@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routers = require('./routes/index.js');
+const { createUser, login } = require('./controllers/users');
 
 mongoose.connect('mongodb://localhost:27017/mestonewdb', {
   useNewUrlParser: true,
@@ -21,6 +22,8 @@ app.use((req, res, next) => {
 
   next();
 });
+app.post('/signup', createUser);
+app.post('/signin', login);
 app.use('/', routers);
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
