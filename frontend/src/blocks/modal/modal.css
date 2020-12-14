@@ -1,0 +1,30 @@
+@import url(../modal/__title/modal__title.css);
+@import url(../modal/__title/_type_auth/modal__titile_type_auth.css);
+@import url(../modal/__title/_type_auth-tooltip/modal__title_type_auth-tooltip.css);
+@import url(../modal/__btn/modal__btn.css);
+@import url(../modal/__btn/_type_auth/modal__btn_type_auth.css);
+@import url(../modal/__container/modal__container.css);
+@import url(../modal/__close/modal__close.css);
+@import url(../modal/__overlay/modal__overlay.css);
+@import url(../modal/__wrapper/modal__wrapper.css);
+@import url(../modal/__picture-image/modal__picture-image.css);
+@import url(../modal/__picture-text/modal__picture-text.css);
+@import url(../modal/__input/modal__input.css);
+@import url(../modal/__btn/_disabled/modal__btn_disabled.css);
+@import url(../modal/__input/_type_error/modal__input_type_error.css);
+@import url(../modal/__input/_type_auth.css/modal__input_type_auth.css);
+@import url(../modal/__error_visible/modal__error_visible.css);
+@import url(../modal/__overlay/__overlay_image/modal__overlay_image.css);
+@import url(../modal/__container/_type_confirm-card-del/modal__container_type_confirm-card-del.css);
+@import url(../modal/__container/_type_avatar/modal__container_type_avatar.css);
+@import url(../modal/__container/_type_auth/modal__container_type_auth.css);
+@import url(../modal/_type_auth/modal_type_auth.css);
+@import url(../modal/__auth_paragraph/modal__auth-paragraph.css);
+@import url(../modal/__auth-signin/modal__auth-signin.css);
+
+.modal {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: visibility 2s linear, opacity 0.3s linear;
+}

@@ -1,0 +1,9 @@
+.modal__overlay {
+    position: fixed;
+    background: #000;
+    opacity: .5;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    }

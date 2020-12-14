@@ -1,0 +1,11 @@
+.elements__like_active {
+    background-image: url(../../../../images/element-like-active.svg);
+  }
+
+  .elements__like_active:focus {
+    outline: none;
+  }
+
+  .elements__like_active:focus-within {
+    outline: none;
+  }

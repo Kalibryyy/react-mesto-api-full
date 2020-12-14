@@ -1,0 +1,11 @@
+.modal__input_type_auth {
+  background-color: #000000;
+  text-align: left;
+  border-bottom: 2px solid #CCC;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+.modal__input_type_auth::placeholder {
+  color: #fff;
+}

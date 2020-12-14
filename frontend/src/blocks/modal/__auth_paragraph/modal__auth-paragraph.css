@@ -1,0 +1,9 @@
+.modal__auth-paragraph {
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.modal__auth-paragraph:hover {
+    cursor: pointer;
+}

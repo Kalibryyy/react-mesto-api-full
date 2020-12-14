@@ -1,0 +1,11 @@
+.modal__btn_type_auth {
+  background-color: white;
+  margin-top: 215px;
+  color: black;
+  margin-bottom: 15px;
+}
+
+.modal__btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}

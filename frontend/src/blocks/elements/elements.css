@@ -1,0 +1,14 @@
+@import url(../elements/__image/elements__image.css);
+@import url(../elements/__text/elements__text.css);
+@import url(../elements/__list/elements__list.css);
+@import url(../elements/__item/elements__item.css);
+@import url(../elements/__footer/elements__footer.css);
+@import url(../elements/__like/elements__like.css);
+@import url(../elements/__like/_active/elements__like_active.css);
+@import url(../elements/__basket/elements__basket.css);
+@import url(../elements/__likes_number/elements__likes-number.css);
+
+.elements {
+    max-width: 882px;
+    margin: 0 auto;
+}

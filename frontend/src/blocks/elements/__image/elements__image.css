@@ -1,0 +1,15 @@
+.elements__image {
+  max-width: 100%;
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  height: 282px;
+  border-radius: 10px 10px 0px 0px;
+  object-position: left;
+  cursor: pointer;
+}
+
+
+
+
+

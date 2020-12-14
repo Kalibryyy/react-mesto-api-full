@@ -1,0 +1,10 @@
+.elements__item {
+  background-image: url(../../../images/element-rectangle.png);
+  max-width: 282px;
+  width: 100%;
+  min-height: 361px;
+  max-height: 100%;
+  object-fit: cover;
+  margin: 0 auto;
+  position: relative;
+}

@@ -1,0 +1,6 @@
+.elements__basket {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+}
