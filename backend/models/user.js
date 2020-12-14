@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
+// const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    default: 'Жак-Ив Кусто',
     minlength: 2,
     maxlength: 30,
   },
   about: {
     type: String,
-    required: true,
+    default: 'Исследователь океана',
     minlength: 2,
     maxlength: 30,
   },
   avatar: {
     type: String,
-    required: [true, 'User picture link is required'],
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     minlength: 2,
-    maxlength: 30,
+    maxlength: 72,
     validate: {
       validator(v) {
         return /^https?:\/\/w{0,3}\.?[\wа-яё/\-.]{0,}#?$/gi.test(v);
@@ -36,6 +37,7 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
   },
 });
+
 
 // userSchema.statics.findUserByCredentials = function (email, password) {
 //   return this.findOne({ email })
