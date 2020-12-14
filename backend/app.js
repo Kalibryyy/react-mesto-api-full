@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+
 const routers = require('./routes/index.js');
 const { createUser, login } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://localhost:27017/mestonewdb', {
   useNewUrlParser: true,
