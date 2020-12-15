@@ -29,6 +29,7 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
+  const { _id } = req.user;
 
   Card.findByIdAndRemove(cardId)
     .orFail(() => {
@@ -42,16 +43,15 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => errorHandler(res, err));
 };
 
-// проверять принадлежит ли карточка авторизованному пользователю - пользуйтесь такой конструкцией:
+// проверять принадлежит ли карточка авторизованному пользователю 
 // if (req.user._id.toString() !== card.owner.toString())
 
-// если кому поможет - правильно так:
+
 //   Card.findById(id)
 //     .orFail()
 //     .then((card) => {
 //       if (!card.owner.equals(req.user._id)) return Promise.reject(new Error('403'));
 //       return Card.findByIdAndRemove(id)
 //     })
-//     .then(() => res.status(200).send({ message: 'карточка удалена' }))
+//     .then(() => res.status(200).send(card))
 
-// карточка у меня будет возвращаться вместо месседжа.
