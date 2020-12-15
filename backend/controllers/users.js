@@ -27,6 +27,21 @@ module.exports.getUser = (req, res) => {
     .catch((err) => errorHandler(res, err));
 };
 
+module.exports.getCurrentUser = (req, res) => {
+  const { _id } = req.user;
+
+  User.findById(_id)
+    .orFail(() => {
+      const error404 = new Error('Нет пользователя с таким id');
+      error404.statusCode = 404;
+      throw error404;
+    })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((err) => errorHandler(res, err));
+};
+
 module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
 

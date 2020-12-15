@@ -41,3 +41,17 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => errorHandler(res, err));
 };
+
+// проверять принадлежит ли карточка авторизованному пользователю - пользуйтесь такой конструкцией:
+// if (req.user._id.toString() !== card.owner.toString())
+
+// если кому поможет - правильно так:
+//   Card.findById(id)
+//     .orFail()
+//     .then((card) => {
+//       if (!card.owner.equals(req.user._id)) return Promise.reject(new Error('403'));
+//       return Card.findByIdAndRemove(id)
+//     })
+//     .then(() => res.status(200).send({ message: 'карточка удалена' }))
+
+// карточка у меня будет возвращаться вместо месседжа.

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const routers = require('./routes/index.js');
-const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 
 mongoose.connect('mongodb://localhost:27017/mestonewdb', {
@@ -17,15 +16,14 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5fc756340991067ecfd131f5',
-  };
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '5fd7a22e640e2eb023ac6362',
+//   };
 
-  next();
-});
-app.post('/signup', createUser);
-app.post('/signin', login);
+//   next();
+// });
+
 app.use('/', routers);
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
