@@ -1,8 +1,6 @@
 module.exports.errorHandler = (res, err) => {
   if (err.statusCode === 404) {
     res.status(404).send({ message: err.message });
-  } else if (err === 403) {
-    res.status(403).send({ message: 'невежливо удалять чужие карточки' }); //?
   } else if (err.name === 'ValidationError') {
     res.status(400).send({ message: err.message });
   } else if (err.name === 'DocumentNotFoundError') {

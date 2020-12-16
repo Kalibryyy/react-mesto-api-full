@@ -54,7 +54,7 @@ module.exports.createUser = (req, res) => {
   User.findOne({ email })
   .then((user) => {
     if (user) {
-      return res.status(403).send({ message: 'пользователь с этим email уже существует' });
+      return res.status(409).send({ message: 'пользователь с этим email уже существует' });
     }
   })
 

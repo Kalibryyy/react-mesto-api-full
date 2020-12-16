@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res) => {
       throw error404;
     })
     .then((card) => {
-      if (!card.owner.equals(_id)) return Promise.reject(new Error('403'));
+      if (!card.owner.equals(_id)) return res.status(403).send({ message: 'нельзя удалять чужие карточки' });
       return Card.findByIdAndRemove(cardId)
       .then((card) => {
         res.status(200).send(card);
