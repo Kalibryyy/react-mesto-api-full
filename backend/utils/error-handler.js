@@ -1,5 +1,7 @@
 const NotFoundError = require('../errors/not-found-err');
 const ValidationError = require('../errors/validation-err');
+const CastError = require('../errors/cast-err');
+const DisconnectedError = require('../errors/disconnected-err');
 
 module.exports.errorHandler = (res, err, next) => {
   if (err.name === 'ValidationError') {
@@ -7,9 +9,9 @@ module.exports.errorHandler = (res, err, next) => {
   } else if (err.name === 'DocumentNotFoundError') {
     next(new NotFoundError('ресурс не найден'));
   } else if (err.name === 'CastError') {
-    res.status(400).send({ message: 'в запросе переданы значения неправильного типа' });
+    next(new CastError('в запросе переданы значения неправильного типа'));
   } else if (err.name === 'DisconnectedError') {
-    res.status(503).send({ message: 'нет соединения с базой данных' });
+    next(new DisconnectedError('нет соединения с базой данных'));
   } else {
       next(err);
   }

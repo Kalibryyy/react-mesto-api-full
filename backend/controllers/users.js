@@ -4,13 +4,16 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { errorHandler } = require('../utils/error-handler');
 const NotFoundError = require('../errors/not-found-err');
+const CastError = require('../errors/cast-err');
+const ConflictingReqError = require('../errors/conflicting-req-err');
+const UnauthorizedError = require('../errors/conflicting-req-err');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.send(users);
     })
-    .catch((err) => errorHandler(res, err));
+    .catch((err) => errorHandler(res, err, next));
 };
 
 module.exports.getUser = (req, res, next) => {
@@ -18,42 +21,35 @@ module.exports.getUser = (req, res, next) => {
 
   User.findById(id)
     .orFail(() => {
-      next(new NotFoundError('Неверный айдишник'));
+      next(new NotFoundError('неверный айдишник'));
     })
     .then((user) => {
       res.status(200).send(user);
     })
-    .catch((err) => errorHandler(res, err));
+    .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
   const { _id } = req.user;
 
   User.findById(_id)
-    .orFail(() => {
-      const error404 = new Error('Нет пользователя с таким id');
-      error404.statusCode = 404;
-      throw error404;
-    })
     .then((user) => {
       res.status(200).send(user);
     })
-    .catch((err) => errorHandler(res, err));
+    .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
 
   if (!email || !password) {
-    return res
-    .status(400)
-    .send({ message: 'в запросе переданы неверные значения' });
+    next(new CastError('в запросе переданы неверные значения'));
   }
 
   User.findOne({ email })
   .then((user) => {
     if (user) {
-      return res.status(409).send({ message: 'пользователь с этим email уже существует' });
+      next(new ConflictingReqError('пользователь с таким email уже существует'));
     }
   })
 
@@ -62,10 +58,10 @@ module.exports.createUser = (req, res) => {
     .then((user) => {
       res.send(user);
     })
-    .catch((err) => errorHandler(res, err));
+    .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -77,10 +73,7 @@ module.exports.login = (req, res) => {
       // вернём токен
       res.send({ token });
     })
-    .catch((err) => {
-      // ошибка аутентификации
-      res
-        .status(401)
-        .send({ message: err.message });
+    .catch(() => {
+      next(new UnauthorizedError('ошибка аутентификации'));
     });
 }; 
