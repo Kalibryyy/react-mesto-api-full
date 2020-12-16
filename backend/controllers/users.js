@@ -1,8 +1,9 @@
-const bcrypt = require('bcryptjs'); 
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken'); 
 // const validator = require('validator');
 const User = require('../models/user');
 const { errorHandler } = require('../utils/error-handler');
-const jwt = require('jsonwebtoken');
+const NotFoundError = require('../errors/not-found-err');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -12,14 +13,12 @@ module.exports.getUsers = (req, res) => {
     .catch((err) => errorHandler(res, err));
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   const { id } = req.params;
 
   User.findById(id)
     .orFail(() => {
-      const error404 = new Error('Нет пользователя с таким id');
-      error404.statusCode = 404;
-      throw error404;
+      next(new NotFoundError('Неверный айдишник'));
     })
     .then((user) => {
       res.status(200).send(user);

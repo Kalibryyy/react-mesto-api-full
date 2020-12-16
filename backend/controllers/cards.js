@@ -17,14 +17,14 @@ module.exports.getCards = (req, res) => {
     });
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res,next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
       res.send({ data: card });
     })
-    .catch((err) => errorHandler(res, err));
+    .catch((err) => errorHandler(res, err, next));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -48,4 +48,17 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => errorHandler(res, err));
 };
 
-//put like
+module.exports.putLike = (req, res) => {
+  // const { cardId } = req.params;
+
+  // Card.findById(cardId)
+  // .orFail(() => {
+  //   const error404 = new Error('карточка не найдена');
+  //   error404.statusCode = 404;
+  //   throw error404;
+  // })
+  // .then((card) => {
+  //   res.status(200).send(card.likes);
+  // })
+  // .catch((err) => errorHandler(res, err));
+}
