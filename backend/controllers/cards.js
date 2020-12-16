@@ -31,27 +31,21 @@ module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
   const { _id } = req.user;
 
-  Card.findByIdAndRemove(cardId)
+  Card.findById(cardId)
     .orFail(() => {
       const error404 = new Error('карточка не найдена');
       error404.statusCode = 404;
       throw error404;
     })
     .then((card) => {
-      res.send(card);
+      if (!card.owner.equals(_id)) return Promise.reject(new Error('403'));
+      return Card.findByIdAndRemove(cardId)
+      .then((card) => {
+        res.status(200).send(card);
+      })
+      .catch((err) => errorHandler(res, err));
     })
     .catch((err) => errorHandler(res, err));
 };
 
-// проверять принадлежит ли карточка авторизованному пользователю 
-// if (req.user._id.toString() !== card.owner.toString())
-
-
-//   Card.findById(id)
-//     .orFail()
-//     .then((card) => {
-//       if (!card.owner.equals(req.user._id)) return Promise.reject(new Error('403'));
-//       return Card.findByIdAndRemove(id)
-//     })
-//     .then(() => res.status(200).send(card))
-
+//put like
