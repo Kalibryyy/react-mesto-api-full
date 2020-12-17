@@ -29,8 +29,10 @@
     "body-parser": "^1.19.0",
     "celebrate": "^13.0.4",
     "express": "^4.17.1",
+    "express-winston": "^4.0.5",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.17",
-    "validator": "^13.5.2"
+    "validator": "^13.5.2",
+    "winston": "^3.3.3"
   }
 }
