@@ -6,16 +6,20 @@ class Api {
 
   _getInitialCards(path, jwt) {
     return fetch(`${this._url}/${path}`, {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwt}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`,
+      }
       })
       .then(this.checkStatus);
   }
 
   getUserInfo(path, jwt) {
     return fetch(`${this._url}/${path}`, {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwt}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`,
+      }
       })
       .then(this.checkStatus);
   }

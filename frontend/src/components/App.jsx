@@ -49,7 +49,7 @@ function App() {
       .register(password, email)
       .then((data) => {
         setUserInfo({
-          email: data.data.email,
+          email: data.email,
         });
         setIsSignedUp(true);
         setIsAuthPopupOpen(!isAuthPopupOpen);
@@ -95,9 +95,10 @@ function App() {
       auth
         .getContent(jwt)
         .then((res) => {
-          if (res.data.email) {
+          console.log(res);
+          if (res.email) {
             setUserInfo({
-              email: res.data.email,
+              email: res.email,
             })
             setIsLoggedIn(true);
             history.push("/");
@@ -117,8 +118,9 @@ function App() {
 
   React.useEffect(() => {
     setIsSpinnerLoading(true);
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
+    if (isLoggedIn) {
+      console.log(isLoggedIn)
+      const jwt = localStorage.getItem("jwt");
       api
       .getAppInfo("users/me", "cards", jwt)
       .then((data) => {
@@ -131,7 +133,7 @@ function App() {
         setIsSpinnerLoading(false);
       });
     }
-  }, []);
+  }, [isLoggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
