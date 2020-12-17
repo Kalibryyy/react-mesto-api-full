@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 
@@ -14,6 +15,23 @@ mongoose.connect('mongodb://localhost:27017/mestonewdb', {
 
 const { PORT = 3000 } = process.env;
 const app = express();
+
+app.use(cors());
+
+// // Массив разешённых доменов
+// const allowedCors = [
+//   'http://localhost:3004/'
+// ];
+
+// app.use(function(req, res, next) {
+//   const { origin } = req.headers; // Записываем в переменную origin соответствующий заголовок
+
+//   if (allowedCors.includes(origin)) { // Проверяем, что значение origin есть среди разрешённых доменов
+//     res.header('Access-Control-Allow-Origin', origin);
+//   }
+
+//   next();
+// });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
