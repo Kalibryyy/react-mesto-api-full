@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken'); 
+// const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const User = require('../models/user');
 const { errorHandler } = require('../utils/error-handler');
@@ -24,7 +24,12 @@ module.exports.getUser = (req, res, next) => {
       next(new NotFoundError('неверный айдишник'));
     })
     .then((user) => {
-      res.status(200).send(user);
+      res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => errorHandler(res, err, next));
 };
@@ -34,31 +39,55 @@ module.exports.getCurrentUser = (req, res, next) => {
 
   User.findById(_id)
     .then((user) => {
-      res.status(200).send(user);
+      res.status(200).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => errorHandler(res, err, next));
 };
 
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
   if (!email || !password || !validator.isEmail(email)) {
     next(new CastError('в запросе переданы неверные значения'));
   }
 
   User.findOne({ email })
-  .then((user) => {
-    if (user) {
-      next(new ConflictingReqError('пользователь с таким email уже существует'));
-    }
-  })
-
-  bcrypt.hash(password, 10)
-    .then(hash => User.create({ name, about, avatar, email, password: hash }))
     .then((user) => {
-      res.send(user);
+      if (user) {
+        next(new ConflictingReqError('пользователь с таким email уже существует'));
+      }
+    });
+
+  User.create({
+    name, about, avatar, email, password,
+  })
+    .then((user) => {
+      res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      });
     })
     .catch((err) => errorHandler(res, err, next));
+  // bcrypt.hash(password, 10)
+  //   .then(hash => User.create({ name, about, avatar, email, password: hash }))
+  //   .then((user) => {
+  //     res.send({
+  //       name: user.name,
+  //       about: user.about,
+  //       avatar: user.avatar,
+  //       email: user.email,
+  //     })
+  //   })
+  //   .catch((err) => errorHandler(res, err, next));
 };
 
 module.exports.login = (req, res, next) => {
@@ -76,4 +105,4 @@ module.exports.login = (req, res, next) => {
     .catch(() => {
       next(new UnauthorizedError('ошибка аутентификации'));
     });
-}; 
+};

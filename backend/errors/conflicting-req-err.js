@@ -5,4 +5,4 @@ class ConflictingReqError extends Error {
   }
 }
 
-module.exports = ConflictingReqError; 
+module.exports = ConflictingReqError;

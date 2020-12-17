@@ -11,7 +11,7 @@ module.exports.getCards = (req, res, next) => {
     .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.createCard = (req, res,next) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
@@ -32,25 +32,25 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       if (!card.owner.equals(_id)) next(new ForbiddenError('нельзя удалять чужие карточки'));
       return Card.findByIdAndRemove(cardId)
-      .then((card) => {
-        res.status(200).send(card);
-      })
-      .catch((err) => errorHandler(res, err, next));
+        .then(() => {
+          res.status(200).send(card);
+        })
+        .catch((err) => errorHandler(res, err, next));
     })
     .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.putLike = (req, res, next) => {
-  // const { cardId } = req.params;
+// module.exports.putLike = (req, res, next) => {
+// const { cardId } = req.params;
 
-  // Card.findById(cardId)
-  // .orFail(() => {
-  //   const error404 = new Error('карточка не найдена');
-  //   error404.statusCode = 404;
-  //   throw error404;
-  // })
-  // .then((card) => {
-  //   res.status(200).send(card.likes);
-  // })
-  // .catch((err) => errorHandler(res, err));
-}
+// Card.findById(cardId)
+// .orFail(() => {
+//   const error404 = new Error('карточка не найдена');
+//   error404.statusCode = 404;
+//   throw error404;
+// })
+// .then((card) => {
+//   res.status(200).send(card.likes);
+// })
+// .catch((err) => errorHandler(res, err));
+// };

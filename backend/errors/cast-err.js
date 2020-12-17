@@ -5,4 +5,4 @@ class CastError extends Error {
   }
 }
 
-module.exports = CastError; 
+module.exports = CastError;

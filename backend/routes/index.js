@@ -13,14 +13,14 @@ router.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().min(8).max(72),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8)
-  })
+    password: Joi.string().required().min(8),
+  }),
 }), createUser);
 router.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8)
-  })
+    password: Joi.string().required().min(8),
+  }),
 }), login);
 router.use('/users', auth, usersRouter);
 router.use('/cards', auth, cardsRouter);

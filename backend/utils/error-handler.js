@@ -13,6 +13,6 @@ module.exports.errorHandler = (res, err, next) => {
   } else if (err.name === 'DisconnectedError') {
     next(new DisconnectedError('нет соединения с базой данных'));
   } else {
-      next(err);
+    next(err);
   }
 };

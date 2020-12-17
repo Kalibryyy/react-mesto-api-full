@@ -5,4 +5,4 @@ class DisconnectedError extends Error {
   }
 }
 
-module.exports = DisconnectedError; 
+module.exports = DisconnectedError;
