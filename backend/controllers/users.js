@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); 
-// const validator = require('validator');
+const validator = require('validator');
 const User = require('../models/user');
 const { errorHandler } = require('../utils/error-handler');
 const NotFoundError = require('../errors/not-found-err');
@@ -42,7 +42,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
 
-  if (!email || !password) {
+  if (!email || !password || !validator.isEmail(email)) {
     next(new CastError('в запросе переданы неверные значения'));
   }
 
