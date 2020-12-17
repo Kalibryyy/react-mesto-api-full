@@ -117,8 +117,10 @@ function App() {
 
   React.useEffect(() => {
     setIsSpinnerLoading(true);
-    api
-      .getAppInfo("users/me", "cards")
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      api
+      .getAppInfo("users/me", "cards", jwt)
       .then((data) => {
         const [userData, cardsArray] = data;
         setCards(cardsArray);
@@ -128,6 +130,7 @@ function App() {
       .finally(() => {
         setIsSpinnerLoading(false);
       });
+    }
   }, []);
 
   function handleEditAvatarClick() {

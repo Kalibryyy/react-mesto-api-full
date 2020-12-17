@@ -4,22 +4,24 @@ class Api {
     this.headers = options.headers;
   }
 
-  _getInitialCards(path) {
-    return fetch(`${this._url}${path}`, {
-        headers: this.headers
+  _getInitialCards(path, jwt) {
+    return fetch(`${this._url}/${path}`, {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwt}`,
       })
       .then(this.checkStatus);
   }
 
-  getUserInfo(path) {
-    return fetch(`${this._url}${path}`, {
-        headers: this.headers
+  getUserInfo(path, jwt) {
+    return fetch(`${this._url}/${path}`, {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwt}`,
       })
       .then(this.checkStatus);
   }
 
-  getAppInfo(userDataPath, cardsDataPath) {
-    return Promise.all([this.getUserInfo(userDataPath), this._getInitialCards(cardsDataPath)]);
+  getAppInfo(userDataPath, cardsDataPath, jwt) {
+    return Promise.all([this.getUserInfo(userDataPath, jwt), this._getInitialCards(cardsDataPath, jwt)]);
   }
 
   updateInfo(path, {name, about}) {
@@ -80,9 +82,8 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-15/',
+  baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000'}`,
   headers: {
-    authorization: '4b693f44-f60e-4f4e-bfd2-2bb476e7515d',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   }
 });
