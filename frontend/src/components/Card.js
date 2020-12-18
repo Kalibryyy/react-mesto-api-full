@@ -1,6 +1,6 @@
 import React from 'react';
 import basketImage from '../images/element-trash.png';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function Card(props) {
   const currentUser = React.useContext(CurrentUserContext);

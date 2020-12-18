@@ -1,27 +1,29 @@
-import React from "react";
-import { Route, Switch, Redirect, useHistory } from "react-router-dom";
-import Header from "./Header";
-import Main from "./Main";
-import Footer from "./Footer";
-import ImagePopup from "./ImagePopup";
-import PopupWithForm from "./PopupWithForm";
-import EditProfilePopup from "./EditPropfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
-import AddPlacePopup from "./AddPlacePopup";
-import Register from "./Register.jsx";
-import Login from "./Login.jsx";
-import InfoToolTip from "./InfoTooltip";
-import ProtectedRoute from "./ProtectedRoute";
-import { api } from "../utils/Api";
-import * as auth from "../utils/Auth";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import React from 'react';
+import {
+  Route, Switch, Redirect, useHistory,
+} from 'react-router-dom';
+import Header from './Header';
+import Main from './Main';
+import Footer from './Footer';
+import ImagePopup from './ImagePopup';
+import PopupWithForm from './PopupWithForm';
+import EditProfilePopup from './EditPropfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import Register from './Register';
+import Login from './Login';
+import InfoToolTip from './InfoTooltip';
+import ProtectedRoute from './ProtectedRoute';
+import api from '../utils/Api';
+import * as auth from '../utils/Auth';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(
-    false
+    false,
   );
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
-    false
+    false,
   );
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isSpinnerLoading, setIsSpinnerLoading] = React.useState(false);
@@ -31,7 +33,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [isAuthPopupOpen, setIsAuthPopupOpen] = React.useState(false);
   const [userInfo, setUserInfo] = React.useState({
-    email: "",
+    email: '',
   });
   const [isSignedUp, setIsSignedUp] = React.useState(false);
   const [message, setMessage] = React.useState('');
@@ -39,6 +41,25 @@ function App() {
   const userEmail = userInfo.email;
 
   const history = useHistory();
+
+  function tokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth
+        .getContent(jwt)
+        .then((res) => {
+          console.log(res);
+          if (res.email) {
+            setUserInfo({
+              email: res.email,
+            });
+            setIsLoggedIn(true);
+            history.push('/');
+          }
+        })
+        .catch((err) => console.error(err));
+    }
+  }
 
   React.useEffect(() => {
     tokenCheck();
@@ -53,15 +74,15 @@ function App() {
         });
         setIsSignedUp(true);
         setIsAuthPopupOpen(!isAuthPopupOpen);
-        history.push("/sign-in");
+        history.push('/sign-in');
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         if (err === 400) {
           setMessage('Некорректно заполнено одно из полей');
         }
-          setIsSignedUp(false);
-          setIsAuthPopupOpen(!isAuthPopupOpen);
+        setIsSignedUp(false);
+        setIsAuthPopupOpen(!isAuthPopupOpen);
       });
   }
 
@@ -70,13 +91,13 @@ function App() {
       .authorize(password, email)
       .then((data) => {
         if (data.token) {
-          localStorage.setItem("jwt", data.token);
+          localStorage.setItem('jwt', data.token);
         }
         setIsLoggedIn(true);
         setUserInfo({
-          email: email,
+          email,
         });
-        history.push("/");
+        history.push('/');
       })
       .catch((err) => {
         if (err === 400) {
@@ -89,27 +110,8 @@ function App() {
       });
   }
 
-  function tokenCheck() {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
-      auth
-        .getContent(jwt)
-        .then((res) => {
-          console.log(res);
-          if (res.email) {
-            setUserInfo({
-              email: res.email,
-            })
-            setIsLoggedIn(true);
-            history.push("/");
-          };
-        })
-        .catch((err) => console.error(err));
-    }
-  }
-
   function handleLogOut() {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem('jwt');
     setUserInfo({
       email: '',
     });
@@ -119,19 +121,19 @@ function App() {
   React.useEffect(() => {
     setIsSpinnerLoading(true);
     if (isLoggedIn) {
-      console.log(isLoggedIn)
-      const jwt = localStorage.getItem("jwt");
+      console.log(isLoggedIn);
+      const jwt = localStorage.getItem('jwt');
       api
-      .getAppInfo("users/me", "cards", jwt)
-      .then((data) => {
-        const [userData, cardsArray] = data;
-        setCards(cardsArray);
-        setCurrentUser(userData);
-      })
-      .catch((err) => console.log(`Error ${err}`))
-      .finally(() => {
-        setIsSpinnerLoading(false);
-      });
+        .getAppInfo('users/me', 'cards', jwt)
+        .then((data) => {
+          const [userData, cardsArray] = data;
+          setCards(cardsArray);
+          setCurrentUser(userData);
+        })
+        .catch((err) => console.log(`Error ${err}`))
+        .finally(() => {
+          setIsSpinnerLoading(false);
+        });
     }
   }, [isLoggedIn]);
 
@@ -163,13 +165,11 @@ function App() {
   }
 
   function handleCardDelete(id) {
-    const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem('jwt');
     api
-      .delete("cards", id, jwt)
+      .delete('cards', id, jwt)
       .then(() => {
-        const newCards = cards.filter((c) => {
-          return c._id !== id;
-        });
+        const newCards = cards.filter((c) => c._id !== id);
         setCards(newCards);
       })
       .catch((err) => console.log(`Error ${err}`));
@@ -181,7 +181,7 @@ function App() {
     if (!isLiked) {
       // Отправляем запрос в API и получаем обновлённые данные карточки
       api
-        .put("cards/likes", card._id)
+        .put('cards/likes', card._id)
         .then((newCard) => {
           // Формируем новый массив на основе имеющегося
           const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
@@ -191,7 +191,7 @@ function App() {
         .catch((err) => console.log(`Error ${err}`));
     } else {
       api
-        .delete("cards/likes", card._id)
+        .delete('cards/likes', card._id)
         .then((newCard) => {
           // Формируем новый массив на основе имеющегося
           const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
@@ -203,9 +203,9 @@ function App() {
   }
 
   function handleUpdateUser({ name, about }) {
-    const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem('jwt');
     api
-      .updateInfo("users/me", {
+      .updateInfo('users/me', {
         name,
         about,
       }, jwt)
@@ -218,7 +218,7 @@ function App() {
 
   function handleUpdateAvatar({ avatar }) {
     api
-      .updateAvatar("users/me/avatar", {
+      .updateAvatar('users/me/avatar', {
         avatar,
       })
       .then((data) => {
@@ -229,9 +229,9 @@ function App() {
   }
 
   function handleAddPlace({ name, link }) {
-    const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem('jwt');
     api
-      .addCard("cards", {
+      .addCard('cards', {
         name,
         link,
       }, jwt)
@@ -249,20 +249,20 @@ function App() {
           <Route exact path="/">
             <Header
               isLoggedIn={isLoggedIn}
-              title={"Выйти"}
-              link={"sign-in"}
+              title={'Выйти'}
+              link={'sign-in'}
               userData={userEmail}
               onLogOut={handleLogOut}
             />
           </Route>
           <Route path="/sign-up">
-            <Header isLoggedIn={isLoggedIn} title={"Войти"} link={"sign-in"} />
+            <Header isLoggedIn={isLoggedIn} title={'Войти'} link={'sign-in'} />
           </Route>
           <Route path="/sign-in">
             <Header
               isLoggedIn={isLoggedIn}
-              title={"Регистрация"}
-              link={"sign-up"}
+              title={'Регистрация'}
+              link={'sign-up'}
             />
           </Route>
         </header>
@@ -305,7 +305,7 @@ function App() {
           isClose={isAddPlacePopupOpen}
           onAddPlace={handleAddPlace}
         />
-        <PopupWithForm name={"confirm-card-del"} title={"Вы уверены?"} />
+        <PopupWithForm name={'confirm-card-del'} title={'Вы уверены?'} />
         <EditAvatarPopup
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}

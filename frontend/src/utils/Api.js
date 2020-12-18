@@ -1,3 +1,5 @@
+const checkStatus = (res) => (res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}`)));
+
 class Api {
   constructor(options) {
     this._url = options.baseUrl;
@@ -11,7 +13,7 @@ class Api {
         Authorization: `Bearer ${jwt}`,
       },
     })
-      .then(this.checkStatus);
+      .then(checkStatus);
   }
 
   getUserInfo(path, jwt) {
@@ -21,7 +23,7 @@ class Api {
         Authorization: `Bearer ${jwt}`,
       },
     })
-      .then(this.checkStatus);
+      .then(checkStatus);
   }
 
   getAppInfo(userDataPath, cardsDataPath, jwt) {
@@ -40,7 +42,7 @@ class Api {
         about,
       }),
     })
-      .then(this.checkStatus);
+      .then(checkStatus);
   }
 
   put(path, id) {
@@ -48,7 +50,7 @@ class Api {
       method: 'PUT',
       headers: this.headers,
     })
-      .then(this.checkStatus);
+      .then(checkStatus);
   }
 
   delete(path, id, jwt) {
@@ -59,7 +61,7 @@ class Api {
         Authorization: `Bearer ${jwt}`,
       },
     })
-      .then(this.checkStatus)
+      .then(checkStatus)
       .then((res) => res);
   }
 
@@ -71,7 +73,7 @@ class Api {
         avatar,
       }),
     })
-      .then(this.checkStatus);
+      .then(checkStatus);
   }
 
   addCard(path, { name, link }, jwt) {
@@ -86,17 +88,15 @@ class Api {
         link,
       }),
     })
-      .then(this.checkStatus);
-  }
-
-  checkStatus(res) {
-    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
+      .then(checkStatus);
   }
 }
 
-export const api = new Api({
+const api = new Api({
   baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000'}`,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+export default api;
