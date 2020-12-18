@@ -7,7 +7,7 @@ class Api {
   _getInitialCards(path, jwt) {
     return fetch(`${this._url}/${path}`, {
       headers: {
-        'Content-Type': 'application/json',
+        ...this.headers,
         'Authorization': `Bearer ${jwt}`,
       }
       })
@@ -28,10 +28,13 @@ class Api {
     return Promise.all([this.getUserInfo(userDataPath, jwt), this._getInitialCards(cardsDataPath, jwt)]);
   }
 
-  updateInfo(path, {name, about}) {
-    return fetch(`${this._url}${path}`, {
+  updateInfo(path, {name, about}, jwt) {
+    return fetch(`${this._url}/${path}`, {
         method: "PATCH",
-        headers: this.headers,
+        headers: {
+          ...this.headers,
+          'Authorization': `Bearer ${jwt}`,
+        },
         body: JSON.stringify({
           name: name,
           about: about
@@ -41,24 +44,27 @@ class Api {
   }
 
   put(path, id) {
-    return fetch(`${this._url}${path}/${id}`, {
+    return fetch(`${this._url}/${path}/${id}`, {
         method: "PUT",
         headers: this.headers
       })
       .then(this.checkStatus);
   }
 
-  delete(path, id) {
-    return fetch(`${this._url}${path}/${id}`, {
+  delete(path, id, jwt) {
+    return fetch(`${this._url}/${path}/${id}`, {
       method: "DELETE",
-      headers: this.headers
+      headers: {
+        ...this.headers,
+        'Authorization': `Bearer ${jwt}`,
+      },
     })
       .then(this.checkStatus)
       .then(res => res);
   }
 
     updateAvatar(path, { avatar }) {
-      return fetch(`${this._url}${path}`, {
+      return fetch(`${this._url}/${path}`, {
         method: "PATCH",
         headers: this.headers,
         body: JSON.stringify({
@@ -68,10 +74,13 @@ class Api {
         .then(this.checkStatus);
     }
 
-  addCard(path, { name, link }) {
-    return fetch(`${this._url}${path}`, {
+  addCard(path, { name, link }, jwt) {
+    return fetch(`${this._url}/${path}`, {
         method: "POST",
-        headers: this.headers,
+        headers: {
+          ...this.headers,
+          'Authorization': `Bearer ${jwt}`,
+        },
         body: JSON.stringify({
           name: name,
           link: link

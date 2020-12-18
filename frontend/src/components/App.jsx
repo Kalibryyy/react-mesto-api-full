@@ -163,8 +163,9 @@ function App() {
   }
 
   function handleCardDelete(id) {
+    const jwt = localStorage.getItem("jwt");
     api
-      .delete("cards", id)
+      .delete("cards", id, jwt)
       .then(() => {
         const newCards = cards.filter((c) => {
           return c._id !== id;
@@ -202,11 +203,12 @@ function App() {
   }
 
   function handleUpdateUser({ name, about }) {
+    const jwt = localStorage.getItem("jwt");
     api
       .updateInfo("users/me", {
         name,
         about,
-      })
+      }, jwt)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
@@ -227,11 +229,12 @@ function App() {
   }
 
   function handleAddPlace({ name, link }) {
+    const jwt = localStorage.getItem("jwt");
     api
       .addCard("cards", {
         name,
         link,
-      })
+      }, jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
