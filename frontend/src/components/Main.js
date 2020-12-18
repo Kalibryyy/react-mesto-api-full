@@ -3,10 +3,9 @@ import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main(props) {
+  const currentUser = React.useContext(CurrentUserContext);
 
-    const currentUser = React.useContext(CurrentUserContext);
-
-    return (
+  return (
         <main className="content">
         <section className="profile">
             <div className="profile__info">
@@ -26,13 +25,13 @@ function Main(props) {
                 {props.cards.map((card) => (
                     <li className="elements__item" key={card._id}>
                         <Card card={card} onCardClick={props.onCardClick} userId={currentUser._id} onCardDelete={props.onCardDelete} onCardLike={props.onCardLike} />
-                    </li> 
+                    </li>
                 ))}
             </ul>
         </section>
         {props.isLoading && <div className="spinner"><i></i></div>}
         </main>
-    )
+  );
 }
 
 export default Main;
