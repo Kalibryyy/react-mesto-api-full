@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function (email, password) {
+function findUserByCredentials(email, password) {
   return this.findOne({ email })
     .then((user) => {
       if (!user) {
@@ -54,7 +54,9 @@ userSchema.statics.findUserByCredentials = function (email, password) {
           return user; // теперь user доступен
         });
     });
-};
+}
+
+userSchema.statics.findUserByCredentials = findUserByCredentials;
 
 userSchema.pre('save', function (next) {
   return bcrypt.hash(this.password, 10)
