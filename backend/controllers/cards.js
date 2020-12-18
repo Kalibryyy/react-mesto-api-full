@@ -39,5 +39,3 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => errorHandler(res, err, next));
 };
-
-

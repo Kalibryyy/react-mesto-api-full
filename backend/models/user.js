@@ -84,4 +84,3 @@ function preHashPassword(next) {
 userSchema.pre('save', preHashPassword);
 
 module.exports = mongoose.model('user', userSchema);
-

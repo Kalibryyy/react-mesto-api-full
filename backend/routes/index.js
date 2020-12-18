@@ -6,12 +6,6 @@ const cardsRouter = require('./cards.js');
 const { createUser, login } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-}); 
-
 router.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
