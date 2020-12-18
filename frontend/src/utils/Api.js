@@ -30,29 +30,6 @@ class Api {
     return Promise.all([this.getUserInfo(userDataPath, jwt), this._getInitialCards(cardsDataPath, jwt)]);
   }
 
-  updateInfo(path, { name, about }, jwt) {
-    return fetch(`${this._url}/${path}`, {
-      method: 'PATCH',
-      headers: {
-        ...this.headers,
-        Authorization: `Bearer ${jwt}`,
-      },
-      body: JSON.stringify({
-        name,
-        about,
-      }),
-    })
-      .then(checkStatus);
-  }
-
-  put(path, id) {
-    return fetch(`${this._url}/${path}/${id}`, {
-      method: 'PUT',
-      headers: this.headers,
-    })
-      .then(checkStatus);
-  }
-
   delete(path, id, jwt) {
     return fetch(`${this._url}/${path}/${id}`, {
       method: 'DELETE',
@@ -63,17 +40,6 @@ class Api {
     })
       .then(checkStatus)
       .then((res) => res);
-  }
-
-  updateAvatar(path, { avatar }) {
-    return fetch(`${this._url}/${path}`, {
-      method: 'PATCH',
-      headers: this.headers,
-      body: JSON.stringify({
-        avatar,
-      }),
-    })
-      .then(checkStatus);
   }
 
   addCard(path, { name, link }, jwt) {

@@ -48,7 +48,6 @@ function App() {
       auth
         .getContent(jwt)
         .then((res) => {
-          console.log(res);
           if (res.email) {
             setUserInfo({
               email: res.email,
@@ -121,7 +120,6 @@ function App() {
   React.useEffect(() => {
     setIsSpinnerLoading(true);
     if (isLoggedIn) {
-      console.log(isLoggedIn);
       const jwt = localStorage.getItem('jwt');
       api
         .getAppInfo('users/me', 'cards', jwt)
@@ -171,59 +169,6 @@ function App() {
       .then(() => {
         const newCards = cards.filter((c) => c._id !== id);
         setCards(newCards);
-      })
-      .catch((err) => console.log(`Error ${err}`));
-  }
-
-  function handleCardLike(card) {
-    // Проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-    if (!isLiked) {
-      // Отправляем запрос в API и получаем обновлённые данные карточки
-      api
-        .put('cards/likes', card._id)
-        .then((newCard) => {
-          // Формируем новый массив на основе имеющегося
-          const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-          // Обновляем стейт
-          setCards(newCards);
-        })
-        .catch((err) => console.log(`Error ${err}`));
-    } else {
-      api
-        .delete('cards/likes', card._id)
-        .then((newCard) => {
-          // Формируем новый массив на основе имеющегося
-          const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-          // Обновляем стейт
-          setCards(newCards);
-        })
-        .catch((err) => console.log(`Error ${err}`));
-    }
-  }
-
-  function handleUpdateUser({ name, about }) {
-    const jwt = localStorage.getItem('jwt');
-    api
-      .updateInfo('users/me', {
-        name,
-        about,
-      }, jwt)
-      .then((data) => {
-        setCurrentUser(data);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(`Error ${err}`));
-  }
-
-  function handleUpdateAvatar({ avatar }) {
-    api
-      .updateAvatar('users/me/avatar', {
-        avatar,
-      })
-      .then((data) => {
-        setCurrentUser(data);
-        closeAllPopups();
       })
       .catch((err) => console.log(`Error ${err}`));
   }
@@ -284,7 +229,6 @@ function App() {
             onCardClick={handleCardClick}
             cards={cards}
             onCardDelete={handleCardDelete}
-            onCardLike={handleCardLike}
             isLoading={isSpinnerLoading}
             component={Main}
           />
@@ -297,7 +241,6 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           isClose={isEditProfilePopupOpen}
-          onUpdateUser={handleUpdateUser}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
@@ -311,7 +254,6 @@ function App() {
           onClose={closeAllPopups}
           isClose={isEditAvatarPopupOpen}
           onCardClick={handleCardClick}
-          onUpdateAvatar={handleUpdateAvatar}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         <InfoToolTip
