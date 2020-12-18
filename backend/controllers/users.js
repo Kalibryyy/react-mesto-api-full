@@ -1,5 +1,5 @@
-// const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { NODE_ENV, JWT_SECRET } = process.env;
 const validator = require('validator');
 const User = require('../models/user');
 const { errorHandler } = require('../utils/error-handler');
@@ -77,17 +77,6 @@ module.exports.createUser = (req, res, next) => {
       });
     })
     .catch((err) => errorHandler(res, err, next));
-  // bcrypt.hash(password, 10)
-  //   .then(hash => User.create({ name, about, avatar, email, password: hash }))
-  //   .then((user) => {
-  //     res.send({
-  //       name: user.name,
-  //       about: user.about,
-  //       avatar: user.avatar,
-  //       email: user.email,
-  //     })
-  //   })
-  //   .catch((err) => errorHandler(res, err, next));
 };
 
 module.exports.login = (req, res, next) => {
@@ -97,7 +86,10 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       // аутентификация успешна! пользователь в переменной user
       // создадим токен
-      const token = jwt.sign({ _id: user._id }, '693d9a39fba9bdab5c388899a2e3833e7daedecc12ceb5f79ca6112319ab9ece', { expiresIn: '7d' });
+      const token = jwt.sign(
+        { _id: user._id }, 
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', 
+        { expiresIn: '7d' });
 
       // вернём токен
       res.send({ token });

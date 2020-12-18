@@ -58,7 +58,19 @@ function findUserByCredentials(email, password) {
 
 userSchema.statics.findUserByCredentials = findUserByCredentials;
 
-userSchema.pre('save', function (next) {
+// userSchema.pre('save', function (next) {
+//   return bcrypt.hash(this.password, 10)
+//     .then((hash) => {
+//       this.password = hash;
+//       next();
+//     })
+//     .catch((err) => {
+//       next(err);
+//     });
+// });
+
+function preHashPassword(next) {
+  if (!this.isModified('password')) return next();
   return bcrypt.hash(this.password, 10)
     .then((hash) => {
       this.password = hash;
@@ -67,6 +79,9 @@ userSchema.pre('save', function (next) {
     .catch((err) => {
       next(err);
     });
-});
+}
+
+userSchema.pre('save', preHashPassword);
 
 module.exports = mongoose.model('user', userSchema);
+
