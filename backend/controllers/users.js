@@ -100,3 +100,33 @@ module.exports.login = (req, res, next) => {
       next(new UnauthorizedError('ошибка аутентификации'));
     });
 };
+
+module.exports.updateProfile = (req, res, next) => {
+  const { name, about } = req.body;
+  const { _id } = req.user;
+
+  User.findByIdAndUpdate(_id, {name, about}, {
+    new: true, // обработчик then получит на вход обновлённую запись
+    runValidators: true, // данные будут валидированы перед изменением
+    upsert: true // если пользователь не найден, он будет создан
+  })
+  .then((user) => {
+    res.send(user);
+  })
+  .catch((err) => errorHandler(res, err, next));
+};
+
+module.exports.updateAvatar = (req, res, next) => {
+  const { avatar } = req.body;
+  const { _id } = req.user;
+
+  User.findByIdAndUpdate(_id, {avatar}, {
+    new: true, // обработчик then получит на вход обновлённую запись
+    runValidators: true, // данные будут валидированы перед изменением
+    upsert: true // если пользователь не найден, он будет создан
+  })
+  .then((user) => {
+    res.send(user);
+  })
+  .catch((err) => errorHandler(res, err, next));
+}

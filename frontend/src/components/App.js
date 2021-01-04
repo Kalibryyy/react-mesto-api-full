@@ -173,6 +173,34 @@ function App() {
       .catch((err) => console.log(`Error ${err}`));
   }
 
+  function handleUpdateUser({ name, about }) {
+    const jwt = localStorage.getItem('jwt');
+    api
+      .updateInfo('users/me', {
+        name,
+        about,
+      }, jwt)
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(`Error ${err}`));
+  }
+
+  function handleUpdateAvatar({ avatar }) {
+    const jwt = localStorage.getItem('jwt');
+    api
+      .updateAvatar('users/me/avatar', {
+        avatar,
+      }, jwt)
+      .then((data) => {
+        console.log(data);
+        setCurrentUser(data);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(`Error ${err}`));
+  }
+
   function handleAddPlace({ name, link }) {
     const jwt = localStorage.getItem('jwt');
     api
@@ -241,6 +269,7 @@ function App() {
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           isClose={isEditProfilePopupOpen}
+          onUpdateUser={handleUpdateUser}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
@@ -254,6 +283,7 @@ function App() {
           onClose={closeAllPopups}
           isClose={isEditAvatarPopupOpen}
           onCardClick={handleCardClick}
+          onUpdateAvatar={handleUpdateAvatar}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         <InfoToolTip

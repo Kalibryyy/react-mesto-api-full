@@ -30,6 +30,35 @@ class Api {
     return Promise.all([this.getUserInfo(userDataPath, jwt), this._getInitialCards(cardsDataPath, jwt)]);
   }
 
+  updateInfo(path, { name, about }, jwt) {
+    return fetch(`${this._url}/${path}`, {
+      method: 'PATCH',
+      headers: {
+        ...this.headers,
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        name,
+        about,
+      }),
+    })
+      .then(checkStatus);
+  }
+
+  updateAvatar(path, { avatar }, jwt) {
+    return fetch(`${this._url}/${path}`, {
+      method: 'PATCH',
+      headers: {
+        ...this.headers,
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify({
+        avatar,
+      }),
+    })
+      .then(checkStatus);
+  }
+
   delete(path, id, jwt) {
     return fetch(`${this._url}/${path}/${id}`, {
       method: 'DELETE',
