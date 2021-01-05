@@ -85,6 +85,18 @@ class Api {
     })
       .then(checkStatus);
   }
+
+  changeLikeCardStatus(cardId, isLiked, jwt) {
+    const method = isLiked ? 'PUT' : 'DELETE';
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method,
+      headers: {
+        ...this.headers,
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+      .then(checkStatus);
+  }
 }
 
 const api = new Api({

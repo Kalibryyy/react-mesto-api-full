@@ -1,23 +1,23 @@
 {
-  "env": {
-    "browser": true
-  },
-  "extends": [
-    "airbnb-base",
-    "plugin:react/recommended"
-  ],
-  "plugins": ["react", "react-hooks"],
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
+    "env": {
+      "browser": true
+    },
+    "extends": [
+      "airbnb-base",
+      "plugin:react/recommended"
+    ],
+    "plugins": ["react", "react-hooks"],
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "no-underscore-dangle": "off",
+      "no-console": "off",
+      "react/prop-types": 0,
+      "max-len": "off"
     }
-  },
-  "rules": {
-    "no-underscore-dangle": "off",
-    "no-console": "off",
-    "react/prop-types": 0,
-    "max-len": "off"
   }
-}

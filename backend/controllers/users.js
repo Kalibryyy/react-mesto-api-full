@@ -45,7 +45,8 @@ module.exports.getCurrentUser = (req, res, next) => {
         about: user.about,
         avatar: user.avatar,
         email: user.email,
-      });
+        _id: user._id,
+      }); 
     })
     .catch((err) => errorHandler(res, err, next));
 };
@@ -105,28 +106,28 @@ module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate(_id, {name, about}, {
+  User.findByIdAndUpdate(_id, { name, about }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
-    upsert: true // если пользователь не найден, он будет создан
+    upsert: true, // если пользователь не найден, он будет создан
   })
-  .then((user) => {
-    res.send(user);
-  })
-  .catch((err) => errorHandler(res, err, next));
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => errorHandler(res, err, next));
 };
 
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const { _id } = req.user;
 
-  User.findByIdAndUpdate(_id, {avatar}, {
+  User.findByIdAndUpdate(_id, { avatar }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
-    upsert: true // если пользователь не найден, он будет создан
+    upsert: true, // если пользователь не найден, он будет создан
   })
-  .then((user) => {
-    res.send(user);
-  })
-  .catch((err) => errorHandler(res, err, next));
-}
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => errorHandler(res, err, next));
+};

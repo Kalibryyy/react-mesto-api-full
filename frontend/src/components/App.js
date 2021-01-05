@@ -173,6 +173,22 @@ function App() {
       .catch((err) => console.log(`Error ${err}`));
   }
 
+  const handleCardLike = (card) => {
+    const jwt = localStorage.getItem('jwt');
+    // Проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some((item) => item._id === currentUser._id);
+    // Отправляем запрос в API и получаем обновлённые данные карточки
+    api.changeLikeCardStatus(card._id, !isLiked, jwt)
+    // Формируем новый массив на основе имеющегося
+      .then((newCard) => {
+        // newCard.owner = { _id: newCard.owner };
+        const newCards = cards.map((c) => (c._id === card._id ? { ...newCard, owner: { _id: newCard.owner } } : c));
+        // Обновляем стейт
+        setCards(newCards);
+      })
+      .catch((error) => console.log(error));
+  };
+
   function handleUpdateUser({ name, about }) {
     const jwt = localStorage.getItem('jwt');
     api
@@ -194,7 +210,6 @@ function App() {
         avatar,
       }, jwt)
       .then((data) => {
-        console.log(data);
         setCurrentUser(data);
         closeAllPopups();
       })
@@ -209,7 +224,7 @@ function App() {
         link,
       }, jwt)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([{ ...newCard, owner: { _id: newCard.owner } }, ...cards]);
         closeAllPopups();
       })
       .catch((err) => console.log(`Error ${err}`));
@@ -257,6 +272,7 @@ function App() {
             onCardClick={handleCardClick}
             cards={cards}
             onCardDelete={handleCardDelete}
+            onCardLike={handleCardLike}
             isLoading={isSpinnerLoading}
             component={Main}
           />
