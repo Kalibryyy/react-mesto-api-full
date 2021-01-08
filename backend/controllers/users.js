@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-const validator = require('validator');
 const User = require('../models/user');
 const { errorHandler } = require('../utils/error-handler');
 const NotFoundError = require('../errors/not-found-err');
 const CastError = require('../errors/cast-err');
 const ConflictingReqError = require('../errors/conflicting-req-err');
 const UnauthorizedError = require('../errors/conflicting-req-err');
+const ValidationError = require('../errors/validation-err');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -24,13 +24,9 @@ module.exports.getUser = (req, res, next) => {
     .orFail(() => {
       next(new NotFoundError('неверный айдишник'));
     })
+    .select()
     .then((user) => {
-      res.status(200).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
+      res.status(200).send(user);
     })
     .catch((err) => errorHandler(res, err, next));
 };
@@ -40,13 +36,7 @@ module.exports.getCurrentUser = (req, res, next) => {
 
   User.findById(_id)
     .then((user) => {
-      res.status(200).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id,
-      }); 
+      res.status(200).send(user);
     })
     .catch((err) => errorHandler(res, err, next));
 };
@@ -56,8 +46,10 @@ module.exports.createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  if (!email || !password || !validator.isEmail(email)) {
+  if (!email || !password) {
     next(new CastError('в запросе переданы неверные значения'));
+  } else if (password.includes(' ')) {
+    next(new ValidationError('не допускаются пробелы в пароле'));
   }
 
   User.findOne({ email })
@@ -76,6 +68,7 @@ module.exports.createUser = (req, res, next) => {
         about: user.about,
         avatar: user.avatar,
         email: user.email,
+        _id: user._id,
       });
     })
     .catch((err) => errorHandler(res, err, next));
@@ -106,6 +99,10 @@ module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   const { _id } = req.user;
 
+  if (!name || !about) {
+    next(new CastError('поля name и about должны быть заполнены'));
+  }
+
   User.findByIdAndUpdate(_id, { name, about }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true, // данные будут валидированы перед изменением
@@ -120,6 +117,10 @@ module.exports.updateProfile = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   const { _id } = req.user;
+
+  if (!avatar) {
+    next(new CastError('поле аватар обязательно для заполнения'));
+  }
 
   User.findByIdAndUpdate(_id, { avatar }, {
     new: true, // обработчик then получит на вход обновлённую запись

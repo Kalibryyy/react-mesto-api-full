@@ -19,29 +19,35 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     minlength: 2,
-    maxlength: 300,
+    maxlength: 500,
     validate: {
       validator(v) {
         return validator.isURL(v);
-        // return /^https?:\/\/w{0,3}\.?[\wа-яё/\-.]{0,}#?$/gi.test(v);
       },
-      message: 'Здесь должна быть ссылка',
+      message: 'здесь должна быть ссылка',
     },
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator(v) {
+        return validator.isEmail(v);
+      },
+      message: ({ value }) => `${value} - некорректный email`,
+    },
   },
   password: {
     type: String,
     required: true,
     minlength: 8,
+    select: false,
   },
 });
 
 function findUserByCredentials(email, password) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
@@ -59,17 +65,6 @@ function findUserByCredentials(email, password) {
 }
 
 userSchema.statics.findUserByCredentials = findUserByCredentials;
-
-// userSchema.pre('save', function (next) {
-//   return bcrypt.hash(this.password, 10)
-//     .then((hash) => {
-//       this.password = hash;
-//       next();
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// });
 
 function preHashPassword(next) {
   if (!this.isModified('password')) return next();

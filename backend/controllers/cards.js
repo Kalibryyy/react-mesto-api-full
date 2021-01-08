@@ -16,7 +16,6 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    // .populate('owner')
     .then((card) => {
       res.send(card);
     })
@@ -29,7 +28,7 @@ module.exports.deleteCard = (req, res, next) => {
 
   Card.findById(cardId)
     .orFail(() => {
-      next(new NotFoundError('карточка не найдена'));
+      next(new NotFoundError('нет карточки с таким id'));
     })
     .then((card) => {
       if (!card.owner.equals(_id)) next(new ForbiddenError('нельзя удалять чужие карточки'));
@@ -42,15 +41,15 @@ module.exports.deleteCard = (req, res, next) => {
     .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.putLike = (req, res, next) => {
+const updateLike = (req, res, method, next) => {
   const { cardId } = req.params;
   const { _id } = req.user;
 
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: _id } }, // добавить _id в массив, если его там нет
+  Card.findByIdAndUpdate(cardId, { [method]: { likes: _id } },
     { new: true })
     .populate('likes')
     .orFail(() => {
-      next(new NotFoundError('карточка не найдена'));
+      next(new NotFoundError('нет карточки с таким id'));
     })
     .then((card) => {
       res.status(200).send(card);
@@ -58,17 +57,5 @@ module.exports.putLike = (req, res, next) => {
     .catch((err) => errorHandler(res, err, next));
 };
 
-module.exports.removeLike = (req, res, next) => {
-  const { cardId } = req.params;
-  const { _id } = req.user;
-
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: _id } }, // убрать _id из массива
-    { new: true })
-    .orFail(() => {
-      next(new NotFoundError('карточка не найдена'));
-    })
-    .then((card) => {
-      res.status(200).send(card);
-    })
-    .catch((err) => errorHandler(res, err, next));
-};
+module.exports.putLike = (req, res, next) => updateLike(req, res, '$addToSet', next); // добавить _id в массив, если его там нет
+module.exports.removeLike = (req, res, next) => updateLike(req, res, '$pull', next); // убрать _id из массива

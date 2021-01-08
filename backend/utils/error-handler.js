@@ -5,7 +5,7 @@ const DisconnectedError = require('../errors/disconnected-err');
 
 module.exports.errorHandler = (res, err, next) => {
   if (err.name === 'ValidationError') {
-    next(new ValidationError('ошибка валидации'));
+    next(new ValidationError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
   } else if (err.name === 'DocumentNotFoundError') {
     next(new NotFoundError('ресурс не найден'));
   } else if (err.name === 'CastError') {
